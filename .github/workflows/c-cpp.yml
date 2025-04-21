@@ -17,8 +17,8 @@ jobs:
           - { name: 'Windows_VS2019_x86', targetPlatform: 'x86' }
 
     env:
-      VCPKG_LOCATION: ${{ github.workspace }}/vcpkg
-      VCPKG_RESPONSE_FILE: ${{ github.workspace }}/azure-devops/vcpkg-windows.txt
+      VCPKG_LOCATION: ${{ github.workspace }}\vcpkg
+      VCPKG_RESPONSE_FILE: ${{ github.workspace }}\azure-devops\vcpkg-windows.txt
 
     steps:
       - name: Checkout repository
