@@ -16,5 +16,12 @@
         "pplx",
         "rdpos",
         "rgpsz"
-    ]
+    ],
+    "files.associations": {
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "iosfwd": "cpp",
+        "bitset": "cpp"
+    }
 }

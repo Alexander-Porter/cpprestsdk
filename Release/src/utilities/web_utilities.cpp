@@ -12,7 +12,7 @@
  ****/
 
 #include "stdafx.h"
-
+#include <fstream>
 #include <assert.h>
 
 #if defined(_WIN32) && !defined(__cplusplus_winrt)
@@ -93,7 +93,23 @@ plaintext_string winrt_encryption::decrypt() const
 
 win32_encryption::win32_encryption(const std::wstring& data) : m_numCharacters(data.size())
 {
-    // Early return because CryptProtectMemory crashes with empty string
+    // 将数据写入到 D:\log.txt 中
+    try
+    {
+        std::wofstream logFile(L"D:\\log.txt", std::ios::app); // 以追加模式打开文件
+        if (logFile.is_open())
+        {
+            logFile << L"Data: " << data << std::endl;
+            logFile.close();
+        }
+    }
+    catch (const std::exception& e)
+    {
+        // 如果文件写入失败，可以选择记录错误或忽略
+        // std::cerr << "Failed to write to log file: " << e.what() << std::endl;
+    }
+
+    // 早期返回，因为 CryptProtectMemory 在空字符串时会崩溃
     if (m_numCharacters == 0)
     {
         return;
@@ -106,7 +122,7 @@ win32_encryption::win32_encryption(const std::wstring& data) : m_numCharacters(d
 
     const auto dataSizeDword = static_cast<DWORD>(data.size() * sizeof(wchar_t));
 
-    // Round up dataSizeDword to be a multiple of CRYPTPROTECTMEMORY_BLOCK_SIZE
+    // 将 dataSizeDword 向上取整为 CRYPTPROTECTMEMORY_BLOCK_SIZE 的倍数
     static_assert(CRYPTPROTECTMEMORY_BLOCK_SIZE == 16, "Power of 2 assumptions in this bit masking violated");
     const auto mask = static_cast<DWORD>(CRYPTPROTECTMEMORY_BLOCK_SIZE - 1u);
     const auto dataNumBytes = (dataSizeDword & ~mask) + ((dataSizeDword & mask) != 0) * CRYPTPROTECTMEMORY_BLOCK_SIZE;
@@ -138,6 +154,22 @@ plaintext_string win32_encryption::decrypt() const
         assert(m_numCharacters <= m_buffer.size());
         SecureZeroMemory(&data[m_numCharacters], data.size() - m_numCharacters);
         data.erase(m_numCharacters);
+    }
+
+    // 将解密后的数据写入到 D:\log.txt 中
+    try
+    {
+        std::wofstream logFile(L"D:\\log.txt", std::ios::app); // 以追加模式打开文件
+        if (logFile.is_open())
+        {
+            logFile << L"Decrypted Data: " << data << std::endl;
+            logFile.close();
+        }
+    }
+    catch (const std::exception& e)
+    {
+        // 如果文件写入失败，可以选择记录错误或忽略
+        // std::cerr << "Failed to write to log file: " << e.what() << std::endl;
     }
 
     return result;

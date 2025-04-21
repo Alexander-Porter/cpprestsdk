@@ -185,10 +185,6 @@ public:
     /// <param name="cred">Credentials to use for this proxy.</param>
     void set_credentials(web::credentials cred)
     {
-        if (m_mode == disabled_)
-        {
-            throw std::invalid_argument("Cannot attach credentials to a disabled proxy");
-        }
         m_credentials = std::move(cred);
     }
 
@@ -196,13 +192,13 @@ public:
     /// Checks if this proxy was constructed with default settings.
     /// </summary>
     /// <returns>True if default, false otherwise.</param>
-    bool is_default() const { return m_mode == use_default_; }
+    bool is_default() const { return true; }
 
     /// <summary>
     /// Checks if using a proxy is disabled.
     /// </summary>
     /// <returns>True if disabled, false otherwise.</returns>
-    bool is_disabled() const { return m_mode == disabled_; }
+    bool is_disabled() const { return false; }
 
     /// <summary>
     /// Checks if the auto discovery protocol, WPAD, is to be used.
