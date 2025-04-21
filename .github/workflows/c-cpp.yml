@@ -27,9 +27,13 @@ jobs:
       - name: Initialize vcpkg submodule
         run: git submodule update --init vcpkg
 
+      - name: Bootstrap vcpkg
+        run: .\vcpkg\bootstrap-vcpkg.bat
+        shell: cmd
+
       - name: Run vcpkg
-        run: |
-          .\vcpkg\vcpkg.exe @$VCPKG_RESPONSE_FILE --triplet ${{ matrix.configuration.targetPlatform }}-windows
+        run: .\vcpkg\vcpkg.exe @$VCPKG_RESPONSE_FILE --triplet ${{ matrix.configuration.targetPlatform }}-windows
+        shell: cmd
 
       - name: Run CMake with Ninja (Debug)
         run: |
