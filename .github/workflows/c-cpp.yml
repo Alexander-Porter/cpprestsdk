@@ -18,7 +18,7 @@ jobs:
 
     env:
       VCPKG_LOCATION: ${{ github.workspace }}\vcpkg
-      VCPKG_RESPONSE_FILE: ${{ github.workspace }}\azure-devops\vcpkg-windows.txt
+      VCPKG_RESPONSE_FILE: ${{ github.workspace }}\vcpkg-windows.txt
 
     steps:
       - name: Checkout repository
