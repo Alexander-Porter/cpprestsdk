@@ -1,0 +1,62 @@
+name: Build and Test on Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration:
+          - { name: 'Windows_VS2019_x86', targetPlatform: 'x86' }
+
+    env:
+      VCPKG_LOCATION: ${{ github.workspace }}/vcpkg
+      VCPKG_RESPONSE_FILE: ${{ github.workspace }}/azure-devops/vcpkg-windows.txt
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize vcpkg submodule
+        run: git submodule update --init vcpkg
+
+      - name: Run vcpkg
+        run: |
+          .\vcpkg\vcpkg.exe @$VCPKG_RESPONSE_FILE --triplet ${{ matrix.configuration.targetPlatform }}-windows
+
+      - name: Run CMake with Ninja (Debug)
+        run: |
+          cmake -S . -B ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Debug \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_LOCATION }}/scripts/buildsystems/vcpkg.cmake \
+            -DCPPREST_EXCLUDE_BROTLI=OFF
+          cmake --build ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Debug --config Debug
+        shell: cmd
+
+      - name: Run tests (Debug)
+        run: |
+          cd ${{ github.workspace }}\build\${{ matrix.configuration.targetPlatform }}_Debug\Release\Binaries
+          .\test_runner.exe *testd.dll
+        shell: cmd
+
+      - name: Run CMake with Ninja (Release)
+        run: |
+          cmake -S . -B ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Release \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_LOCATION }}/scripts/buildsystems/vcpkg.cmake \
+            -DCPPREST_EXCLUDE_BROTLI=OFF
+          cmake --build ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Release --config Release
+        shell: cmd
+
+      - name: Run tests (Release)
+        run: |
+          cd ${{ github.workspace }}\build\${{ matrix.configuration.targetPlatform }}_Release\Release\Binaries
+          .\test_runner.exe *test.dll
+        shell: cmd
