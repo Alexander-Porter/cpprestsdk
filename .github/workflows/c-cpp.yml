@@ -40,14 +40,17 @@ jobs:
         shell: cmd
 
       - name: Run vcpkg
-        run: .\vcpkg\vcpkg.exe install openssl:x64-windows boost-system boost-date-time boost-regex boost-interprocess brotli --triplet ${{ matrix.configuration.targetPlatform }}-windows
+        run: |
+          .\vcpkg\vcpkg.exe install openssl:x64-windows boost-system boost-date-time boost-regex boost-interprocess brotli --triplet ${{ matrix.configuration.targetPlatform }}-windows
+          .\vcpkg\vcpkg.exe install boost-system boost-date-time boost-regex
+          set BOOST_ROOT=%VCPKG_LOCATION%\installed\x64-windows
         shell: cmd
 
       - name: Run CMake with Ninja (Debug)
         run: |
-          cmake -S . -B ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Debug \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_LOCATION }}/scripts/buildsystems/vcpkg.cmake \
+          cmake -S . -B ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Debug ^
+            -DCMAKE_BUILD_TYPE=Debug ^
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_LOCATION }}\scripts\buildsystems\vcpkg.cmake ^
             -DCPPREST_EXCLUDE_BROTLI=OFF
           cmake --build ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Debug --config Debug
         shell: cmd
