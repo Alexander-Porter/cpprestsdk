@@ -40,7 +40,7 @@ jobs:
         shell: cmd
 
       - name: Run vcpkg
-        run: .\vcpkg\vcpkg.exe install openssl boost-system boost-date-time boost-regex boost-interprocess websocketpp brotli --triplet ${{ matrix.configuration.targetPlatform }}-windows
+        run: .\vcpkg\vcpkg.exe install openssl:x64-windows boost-system boost-date-time boost-regex boost-interprocess websocketpp brotli --triplet ${{ matrix.configuration.targetPlatform }}-windows
         shell: cmd
 
       - name: Run CMake with Ninja (Debug)
