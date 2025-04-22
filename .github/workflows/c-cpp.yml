@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         configuration:
-          - { name: 'Windows_VS2019_x86', targetPlatform: 'x86' }
+          - { name: 'Windows_VS2019', targetPlatform: 'x64' }
 
     env:
       VCPKG_LOCATION: ${{ github.workspace }}\vcpkg
