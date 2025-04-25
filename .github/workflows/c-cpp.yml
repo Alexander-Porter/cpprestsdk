@@ -42,7 +42,7 @@ jobs:
       - name: Run vcpkg
         run: |
           .\vcpkg\vcpkg.exe install openssl:x64-windows boost-system boost-date-time boost-regex boost-interprocess brotli --triplet ${{ matrix.configuration.targetPlatform }}-windows
-          .\vcpkg\vcpkg.exe install boost-system boost-date-time boost-regex
+          .\vcpkg\vcpkg.exe install boost-system boost-date-time boost-regex zlib
           set BOOST_ROOT=%VCPKG_LOCATION%\installed\x64-windows
         shell: cmd
 
