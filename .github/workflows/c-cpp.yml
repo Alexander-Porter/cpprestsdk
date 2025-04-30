@@ -42,11 +42,12 @@ jobs:
       - name: Run vcpkg
         run: |
           .\vcpkg\vcpkg.exe install --triplet x64-windows zlib openssl boost-system boost-date-time boost-regex boost-interprocess websocketpp brotli
-          set BOOST_ROOT=%VCPKG_LOCATION%\installed\x64-windows
+          
         shell: cmd
 
       - name: Run CMake with Ninja (Debug)
         run: |
+          set BOOST_ROOT=%VCPKG_LOCATION%\installed\x64-windows
           cmake -S . -B ${{ github.workspace }}/build/${{ matrix.configuration.targetPlatform }}_Debug ^
             -DCMAKE_BUILD_TYPE=Debug ^
             -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_LOCATION }}/scripts/buildsystems/vcpkg.cmake ^
