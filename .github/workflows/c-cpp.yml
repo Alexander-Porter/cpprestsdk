@@ -41,7 +41,7 @@ jobs:
 
       - name: Run vcpkg
         run: |
-          .\vcpkg\vcpkg.exe install --triplet x64-windows zlib openssl boost-system boost-date-time boost-regex boost-interprocess websocketpp brotli
+          .\vcpkg\vcpkg.exe install --triplet x64-windows zlib openssl boost-system boost-date-time boost-regex boost-interprocess brotli
           
         shell: cmd
 
